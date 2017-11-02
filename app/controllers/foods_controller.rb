@@ -1,6 +1,6 @@
 class FoodsController < ApplicationController
   def index
-    @foods = Food.list
+    @foods = Food.all
 
     render("foods_templates/index.html.erb")
   end
@@ -12,16 +12,19 @@ class FoodsController < ApplicationController
   end
 
   def new_form
-    render("foods_templates/new_form.html.erb")
+    render("foods_templates/new.html.erb")
   end
 
   def create_row
     @food = Food.new
 
+    @food.id = params[:id]
     @food.ingredient = params[:ingredient]
     @food.spice = params[:spice]
     @food.measurement = params[:measurement]
     @food.store_address = params[:store_address]
+    
+    @food.save
 
     redirect_to("/foods")
   end
@@ -35,6 +38,7 @@ class FoodsController < ApplicationController
   def update_row
     @food = Food.find(params[:id])
 
+    @food.id = params[:id]
     @food.ingredient = params[:ingredient]
     @food.spice = params[:spice]
     @food.measurement = params[:measurement]
@@ -42,12 +46,15 @@ class FoodsController < ApplicationController
 
     @food.save
 
-    redirect_to("/foods")
+     render("/foods_templates/show.html.erb")
   end
 
   def destroy_row
+    @food = Food.find(params[:id])
+    
     @food.destroy
-
+    
     redirect_to("/foods")
+
   end
 end
